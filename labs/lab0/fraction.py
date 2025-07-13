@@ -22,14 +22,42 @@ class Fraction():
         """ Prints the fraction in the form Fraction(numerator, denominator)"""
         return f"Fraction({self.numerator}, {self.denominator})"
 
+    def __add__(self, other):
+        """
+        Adds another fraction (left) to this one following the rules:
+        - numerator is (self.numerator * other.denominator ) + (other.numerator * self.denominator), and
+        - denominator is self.denominator * other.denominator
+
+        :return A new fraction, the sum of this fraction + other one
+        """
+        return Fraction(
+            (self.numerator * other.denominator ) + (other.numerator * self.denominator),
+            self.denominator * other.denominator
+        )
+
+    def __mul__(self, other):
+        """
+        Multiply this fraction with another fraction.
+
+        :return: A new fraction, the product of this fraction * other one
+        """
+        return Fraction(
+            self.numerator * other.numerator,
+            self.denominator * other.denominator
+        )
+
 # TESTING
 def t1():
-    f = Fraction(3, 4)
-    print(f)
+    x = Fraction(3, 5)
+    y = Fraction(1, 6)
+    z = x * y
+    print(z)
+    print(isinstance(z, Fraction))
 
 def t2():
-    f = Fraction(3, 4)
-    print(repr(f))
+    x = Fraction(2, 3)
+    y = Fraction(3, 4)
+    print(x * y)
 
 capture_and_assert_file(t1, "tests/t1.txt")
 capture_and_assert_file(t2, "tests/t2.txt")
