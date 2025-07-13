@@ -1,4 +1,4 @@
-from PythonTools.debug import capture_and_assert
+from PythonTools.debug import capture_and_assert, capture_and_assert_file
 
 
 class Rectangle(object):
@@ -24,18 +24,30 @@ class Rectangle(object):
         """
         return 2 * (self.width + self.height)
 
+    def __str__(self):
+        """
+        Prints the rectangle represented by "#"
+
+        :return:
+        """
+
+        # Form each row of "#"
+        return "\n".join("#" * self.width for y in range(self.height))
 
 
 # TESTING
 def t1():
-    my_rec = Rectangle(3, 4)
-    print(my_rec.area())
-    print(my_rec.perimeter())
+    recker = Rectangle(3, 2)
+    print(recker)
 
 def t2():
-    my_rec = Rectangle()
-    print(my_rec.perimeter())
+    recker = Rectangle(2, 3)
+    print(recker)
 
-capture_and_assert(t1, """12
-14""")
-capture_and_assert(t2, "6")
+def t3():
+    recker = Rectangle(20, 5)
+    print(recker)
+
+capture_and_assert_file(t1, "tests/t1.txt")
+capture_and_assert_file(t2, "tests/t2.txt")
+capture_and_assert_file(t3, "tests/t3.txt")
