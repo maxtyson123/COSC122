@@ -21,13 +21,12 @@ def double_word(word):
 def multiply_word(word, n):
     """
     Returns the string n times.
-    NOTE: this is currently broken you will need to fix it.
     >>> multiply_word('egg',2)
     'eggegg'
     >>> multiply_word('egg',10)
     'eggeggeggeggeggeggeggeggeggegg'
     """
-    return word *2
+    return word * n
 
 
 def has_123(nums):
@@ -48,11 +47,29 @@ def has_123(nums):
     >>> has_123([4, 1, 2, 3, 2])
     True
     """
-    # Write working code for this function using doctests to help you test it.
-    # ---start student section---
-    pass
-    # ===end student section===
+    start = 1
+    end = 3
+    space_needed = end - start + 1
 
+    for index, number in enumerate(nums):
+
+        # Find the potential start of the chain
+        if number != start:
+            continue
+
+        # Cant fit the range
+        if index + space_needed > len(nums):
+            continue
+
+        valid = True
+        for check_index, check  in enumerate(range(start, end + 1)):
+            valid = valid and check == nums[index + check_index]
+
+        if valid:
+            return valid
+
+    return False
+has_123([1, 2, 31])
 
 def lowercase_strings(strings):
     """ Returns a list with all strings converted to lowercase.
@@ -69,10 +86,7 @@ def lowercase_strings(strings):
     >>> lowercase_strings([])
     []
     """
-    # Write working code for this function using doctests to help you test it.
-    # ---start student section---
-    pass
-    # ===end student section===
+    return [string.lower() for string in strings]
 
 
 def evens(numbers):
@@ -88,12 +102,7 @@ def evens(numbers):
     >>> evens(list(range(1000)))  # doctest: +ELLIPSIS
     [0, 2, 4, 6, ..., 998]
     """
-    # Notice that the special ELLIPSIS code tells doctest to allow anything in place
-    # of the ... this makes testing large lists a lot nicer :)
-    # Write working code for this function using doctests to help you test it.
-    # ---start student section---
-    pass
-    # ===end student section===
+    return [number for number in numbers if number % 2 == 0]
 
 
 def oh_be_gone(word, n=5):
@@ -120,10 +129,13 @@ def oh_be_gone(word, n=5):
     >>> oh_be_gone("oh my what is going on", 10)
     'h my what is ging n'
     """
-    # Write working code for this function using doctests to help you test it.
-    # ---start student section---
-    pass
-    # ===end student section===
+
+    # Only strip strings that have more than n chars
+    if len(word) < n:
+        return word
+
+    return word.replace("o","")
+
 
 
 def same_ends(string_1, string_2):
