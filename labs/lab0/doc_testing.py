@@ -147,12 +147,24 @@ def same_ends(string_1, string_2):
        eg, my_string[0] will return the first character in a string.
     Note: 'g' != 'G'
 
-    Write doctests here to test your code for this function!!!
+    >>> same_ends("same_string", "same_string")
+    False
+    >>> same_ends("should_fail_1", "should_fail_2")
+    False
+    >>> same_ends("1_should_fail", "2_should_fail")
+    False
+    >>> same_ends("these_starts_match", "these_ends_also_match")
+    True
+    >>> same_ends("test_case", "trial_occurrence")
+    True
     """
-    # Write working code for this function using doctests to help you test it.
-    # ---start student section---
-    pass
-    # ===end student section===
+
+    # Don't allow strings that are the same
+    if string_1 == string_2:
+        return False
+
+    return string_1[0] == string_2[0] and string_1[-1] == string_2[-1]
+
 
 
 if __name__ == '__main__':
