@@ -1,9 +1,1 @@
-repr: ReducedFraction(1, 4)
-str: 1/4
-numerator is an int: True
-denominator is an int: True
-
-repr: ReducedFraction(1, 3)
-str: 1/3
-numerator is an int: True
-denominator is an int: True
+3 and 2/3

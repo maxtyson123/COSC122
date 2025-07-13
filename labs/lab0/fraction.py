@@ -78,7 +78,7 @@ class ReducedFraction(Fraction):
         """
         Adds another fraction (left) to this one following and simplifies it
 
-        :return A new, simplified fraction, the sum of this fraction + other one
+        :return: A new, simplified fraction, the sum of this fraction + other one
         """
         fraction_result = super().__add__(other)
         return ReducedFraction(
@@ -90,13 +90,62 @@ class ReducedFraction(Fraction):
         """
         Multiplies another fraction (left) by this one following and simplifies it
 
-        :return A new, simplified fraction, the product of this fraction * other one
+        :return: A new, simplified fraction, the product of this fraction * other one
         """
         fraction_result = super().__mul__(other)
         return ReducedFraction(
             fraction_result.numerator,
             fraction_result.denominator
         )
+
+class MixedNumber:
+    """ An Improper fraction representation in the form X a/b  """
+
+    def __init__(self, whole_part, fraction_part):
+        """ Creates a new MixedNumber with whole and fraction parts """
+
+        # Ensure whole is an int
+        if not isinstance(whole_part, int):
+            raise ValueError("Whole part must be int")
+
+        if isinstance(fraction_part, Fraction):
+            # Convert to reduced form
+            fraction_part = ReducedFraction(fraction_part.numerator, fraction_part.denominator)
+
+        # Ensure fraction is a fraction
+        if not isinstance(fraction_part, ReducedFraction):
+            raise ValueError("Fraction part must be fraction")
+
+        # Store the variables
+        self.whole_part     = whole_part
+        self.fraction_part  = fraction_part
+        self.simplify()
+
+    def simplify(self):
+        """ Converts the improper fraction part into a mixed number """
+        self.whole_part += self.fraction_part.numerator // self.fraction_part.denominator
+        self.fraction_part.numerator %= self.fraction_part.denominator
+
+    def __repr__(self):
+        """ Prints the mixed number in the form MixedNumber(whole_part, fraction_part)"""
+        return f"MixedNumber({self.whole_part}, {repr(self.fraction_part)})"
+
+    def __str__(self):
+        """ Prints the fraction in the form 'whole and numerator/denominator'"""
+        return f"{self.whole_part} and {self.fraction_part}"
+
+    def __add__(self, other):
+        """
+         Adds another mixed number (left) to this one following and simplifies it
+
+         :return: A new, simplified mixed number, the sum of the two numbers whole parts
+                  and fraction parts, simplified
+         """
+        return MixedNumber(
+            self.whole_part + other.whole_part,
+            self.fraction_part + other.fraction_part
+        )
+
 
 def find_gcd(num1, num2):
     """
@@ -111,34 +160,20 @@ def find_gcd(num1, num2):
 
 # TESTING
 def t1():
-    r = ReducedFraction(3, 12)
-    print('repr:', repr(r))
-    print('str:', r)
-    print('numerator is an int:', isinstance(r.numerator, int))
-    print('denominator is an int:', isinstance(r.denominator, int))
-    print()
-    r2 = ReducedFraction(1, 12)
-    result = r + r2
-    print('repr:', repr(result))
-    print('str:', result)
-    print('numerator is an int:', isinstance(r.numerator, int))
-    print('denominator is an int:', isinstance(r.denominator, int))
+    mixed_num = MixedNumber(3, Fraction(4, 6))
+    print(mixed_num)
 
 def t2():
-    f = Fraction(1, 6)
-    r = ReducedFraction(2, 6)
+    mixed_num = MixedNumber(4, Fraction(7, 3))
+    print(mixed_num)
 
-    # the add should return a Fraction
-    print('{} + {} = {}'.format(repr(f), repr(r), repr(f + r)))
-
-    # the add should return a ReducedFraction
-    print('{} + {} = {}'.format(repr(r), repr(f), repr(r + f)))
-
-    # the multiplication should return a Fraction
-    print('{} * {} = {}'.format(repr(f), repr(r), repr(f * r)))
-
-    # the multiplication should return a ReducedFraction
-    print('{} * {} = {}'.format(repr(r), repr(f), repr(r * f)))
+def t3():
+    fraction_1 = Fraction(3, 4)
+    fraction_2 = Fraction(4, 6)
+    mixed_num_1 = MixedNumber(2, fraction_1)
+    mixed_num_2 = MixedNumber(1, fraction_2)
+    print(mixed_num_1 + mixed_num_2)
 
 capture_and_assert_file(t1, "tests/t1.txt")
 capture_and_assert_file(t2, "tests/t2.txt")
+capture_and_assert_file(t3, "tests/t3.txt")
