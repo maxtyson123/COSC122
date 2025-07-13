@@ -1,1 +1,5 @@
-6/12
+True
+x's numerator is 21
+x's denominator is 30
+y's numerator is 7
+y's denominator is 10

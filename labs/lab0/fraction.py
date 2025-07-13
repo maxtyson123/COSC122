@@ -46,18 +46,30 @@ class Fraction():
             self.denominator * other.denominator
         )
 
+    def __eq__(self, other):
+        """
+        Check if this fraction is equal to another
+
+        :return: True if the fraction equals the other fraction in the simplest form (ie 1/2 == 2/4)
+        """
+
+        # Cross multiplication check
+        return  self.numerator * other.denominator == other.numerator * self.denominator
+
 # TESTING
 def t1():
-    x = Fraction(3, 5)
-    y = Fraction(1, 6)
-    z = x * y
-    print(z)
-    print(isinstance(z, Fraction))
+    x = Fraction(1, 2)
+    y = Fraction(1, 2)
+    print(x == y)
 
 def t2():
-    x = Fraction(2, 3)
-    y = Fraction(3, 4)
-    print(x * y)
+    x = Fraction(21, 30)
+    y = Fraction(7, 10)
+    print(x == y)
+    print("x's numerator is", x.numerator)
+    print("x's denominator is", x.denominator)
+    print("y's numerator is", y.numerator)
+    print("y's denominator is", y.denominator)
 
 capture_and_assert_file(t1, "tests/t1.txt")
 capture_and_assert_file(t2, "tests/t2.txt")
