@@ -56,20 +56,49 @@ class Fraction():
         # Cross multiplication check
         return  self.numerator * other.denominator == other.numerator * self.denominator
 
+class ReducedFraction(Fraction):
+    """A version of Fraction that always keeps itself in maximally reduced form"""
+
+    def __init__(self, numerator, denominator=1):
+        """ Initialiser, given both numerator and denominator """
+        super().__init__(numerator, denominator)
+        self._reduce()
+
+    def _reduce(self):
+        """ Reduces the fraction to its simplest possible form (mutating function). """
+        gcd = find_gcd(self.numerator, self.denominator)
+        self.numerator //= gcd
+        self.denominator //= gcd
+
+    def __repr__(self):
+        """ Prints the fraction in the form ReducedFraction(numerator, denominator)"""
+        return f"ReducedFraction({self.numerator}, {self.denominator})"
+
+def find_gcd(num1, num2):
+    """
+    Returns the Greatest Common Divisor (GCD) of num1 and num2.
+    Assumes num1 and num2 are positive integers.
+    """
+    smaller = min(num1, num2)
+    for i in range(smaller, 1, -1):
+        if num1 % i == 0 and num2 % i == 0:
+            return i
+    return 1
+
 # TESTING
 def t1():
-    x = Fraction(1, 2)
-    y = Fraction(1, 2)
-    print(x == y)
+    r = ReducedFraction(3, 12)
+    print('repr:', repr(r))
+    print('str:', r)
+    print('numerator is an int:', isinstance(r.numerator, int))
+    print('denominator is an int:', isinstance(r.denominator, int))
 
 def t2():
-    x = Fraction(21, 30)
-    y = Fraction(7, 10)
-    print(x == y)
-    print("x's numerator is", x.numerator)
-    print("x's denominator is", x.denominator)
-    print("y's numerator is", y.numerator)
-    print("y's denominator is", y.denominator)
+    r = ReducedFraction(12, 24)
+    print('repr:', repr(r))
+    print('str:', r)
+    print('numerator is an int:', isinstance(r.numerator, int))
+    print('denominator is an int:', isinstance(r.denominator, int))
 
 capture_and_assert_file(t1, "tests/t1.txt")
 capture_and_assert_file(t2, "tests/t2.txt")

@@ -1,1 +1,4 @@
-True
+repr: ReducedFraction(1, 4)
+str: 1/4
+numerator is an int: True
+denominator is an int: True

@@ -1,5 +1,4 @@
-True
-x's numerator is 21
-x's denominator is 30
-y's numerator is 7
-y's denominator is 10
+repr: ReducedFraction(1, 2)
+str: 1/2
+numerator is an int: True
+denominator is an int: True
