@@ -1,4 +1,4 @@
-repr: ReducedFraction(1, 2)
-str: 1/2
-numerator is an int: True
-denominator is an int: True
+Fraction(1, 6) + ReducedFraction(1, 3) = Fraction(9, 18)
+ReducedFraction(1, 3) + Fraction(1, 6) = ReducedFraction(1, 2)
+Fraction(1, 6) * ReducedFraction(1, 3) = Fraction(1, 18)
+ReducedFraction(1, 3) * Fraction(1, 6) = ReducedFraction(1, 18)

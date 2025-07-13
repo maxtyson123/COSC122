@@ -74,6 +74,30 @@ class ReducedFraction(Fraction):
         """ Prints the fraction in the form ReducedFraction(numerator, denominator)"""
         return f"ReducedFraction({self.numerator}, {self.denominator})"
 
+    def __add__(self, other):
+        """
+        Adds another fraction (left) to this one following and simplifies it
+
+        :return A new, simplified fraction, the sum of this fraction + other one
+        """
+        fraction_result = super().__add__(other)
+        return ReducedFraction(
+            fraction_result.numerator,
+            fraction_result.denominator
+        )
+
+    def __mul__(self, other):
+        """
+        Multiplies another fraction (left) by this one following and simplifies it
+
+        :return A new, simplified fraction, the product of this fraction * other one
+        """
+        fraction_result = super().__mul__(other)
+        return ReducedFraction(
+            fraction_result.numerator,
+            fraction_result.denominator
+        )
+
 def find_gcd(num1, num2):
     """
     Returns the Greatest Common Divisor (GCD) of num1 and num2.
@@ -92,13 +116,29 @@ def t1():
     print('str:', r)
     print('numerator is an int:', isinstance(r.numerator, int))
     print('denominator is an int:', isinstance(r.denominator, int))
-
-def t2():
-    r = ReducedFraction(12, 24)
-    print('repr:', repr(r))
-    print('str:', r)
+    print()
+    r2 = ReducedFraction(1, 12)
+    result = r + r2
+    print('repr:', repr(result))
+    print('str:', result)
     print('numerator is an int:', isinstance(r.numerator, int))
     print('denominator is an int:', isinstance(r.denominator, int))
+
+def t2():
+    f = Fraction(1, 6)
+    r = ReducedFraction(2, 6)
+
+    # the add should return a Fraction
+    print('{} + {} = {}'.format(repr(f), repr(r), repr(f + r)))
+
+    # the add should return a ReducedFraction
+    print('{} + {} = {}'.format(repr(r), repr(f), repr(r + f)))
+
+    # the multiplication should return a Fraction
+    print('{} * {} = {}'.format(repr(f), repr(r), repr(f * r)))
+
+    # the multiplication should return a ReducedFraction
+    print('{} * {} = {}'.format(repr(r), repr(f), repr(r * f)))
 
 capture_and_assert_file(t1, "tests/t1.txt")
 capture_and_assert_file(t2, "tests/t2.txt")
