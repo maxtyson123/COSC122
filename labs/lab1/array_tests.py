@@ -35,8 +35,7 @@ def process_file(filename, array):
         value = int(value)
         if instruction == 'i':
             array.insert(value)
-            print(f'{"insert":>10}{value:>5d}{
-                  array.comparisons:>8d} comparisons')
+            print(f'{"insert":>10}{value:>5d}{array.comparisons:>8d} comparisons')
         elif instruction == 'c':
             print(f'{"contains":>10}{value:>5d}', end='')
             if array.contains(value):
@@ -45,8 +44,7 @@ def process_file(filename, array):
                 print(f'{array.comparisons:>8d} comparisons (not found)')
         elif instruction == 'd':
             array.remove(value)
-            print(f'{"removed":>10}{value:>5d}{
-                  array.comparisons:>8d} comparisons')
+            print(f'{"removed":>10}{value:>5d}{array.comparisons:>8d} comparisons')
         else:
             print('Whoops. Unknown command........')
     file.close()

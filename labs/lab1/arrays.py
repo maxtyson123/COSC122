@@ -80,12 +80,11 @@ class LinearArray():
         self.comparisons = 0
 
         # Loop through each item in the data list
-        # Add one to comparisons for each comparison
-        # involving a list element
-            # If the item is equal to our search value
-            # return the index this item is at
-        # If we loop through everything and haven't found
-        # the item, return None
+        for index, item in enumerate(self.data):
+            self.comparisons += 1
+            if item == value:
+                return index
+        return None
 
     def __str__(self):
         """
