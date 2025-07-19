@@ -1,12 +1,7 @@
-from arrays import LinearArray
-x = LinearArray()
-# Insert some items
-x.insert(3)
-x.insert(2)
-x.insert(1)
-# Look for an item; should return True
-print(x.contains(2))
-# Remove an item
-x.remove(2)
-# Look for an item; should return False
-print(x.contains(2))
+from labs.lab1.array_tests import process_file
+from labs.lab1.arrays import BitVectorArray
+
+b1 = BitVectorArray(100)   # can store values up to 100
+process_file('file0.txt', b1)
+b3 = BitVectorArray(10000)  # can store values up to 10000
+process_file('file3.txt', b3)
