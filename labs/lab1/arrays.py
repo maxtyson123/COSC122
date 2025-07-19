@@ -152,6 +152,7 @@ class SortedArray():
         # When these cross, they're at the index the item should be at
         while lower_bound < upper_bound:
             index = (lower_bound + upper_bound) // 2
+            self.comparisons += 1
             if self.data[index] < value:
                 lower_bound = index + 1  # Look in the upper half
             else:
@@ -191,8 +192,10 @@ class SortedArray():
         upper_bound = len(self.data)
         while lower_bound < upper_bound:
             index = (lower_bound + upper_bound) // 2
+            self.comparisons += 1
             if self.data[index] == value:  # Found it!
                 return index
+            self.comparisons += 1
             if self.data[index] < value:
                 lower_bound = index + 1  # Look in the upper half
             else:

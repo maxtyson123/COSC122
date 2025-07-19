@@ -86,9 +86,9 @@ def main_tests():
     '''Do some file processing here...'''
 
     # for example, process file0 with a LinearArray
-    filename = 'file0.txt'
+    filename = 'file8.txt'
     print('Processing', filename, 'with a linear array')
-    test_array = LinearArray()  # initialise a LinearArray
+    test_array = SortedArray()  # initialise a LinearArray
     process_file(filename, test_array)
 
     # Add more tests here:)
