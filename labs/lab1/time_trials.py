@@ -3,9 +3,9 @@ import sys
 import time
 import random
 # uncomment the following line to import matplotlib stuff
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from arrays import LinearArray, SortedArray
-
+from labs.lab1.arrays import BitVectorArray
 
 # Get the time units given by the perf_counter
 # Note: time.clock has been deprecated in Python 3.3
@@ -20,91 +20,77 @@ print('Smallest time resolution is ' + str(REZ) + ' seconds')
 SIZES_TO_TEST = list(range(20000, 1000001, 20000))
 
 
-def run_list_trials(num_trials=1):
+def run_trials(make_list, num_trials=1, use_contains = False):
     """ Creates lists filled with a range of values
-    then searches for a randomly generated number in each list.
-    Note: we are being nice here in that the number will be in the list...
-    Returns two lists, the first contains all the list sizes tried and
-    the second contains the average time per locate operation for each list size. """
+   then searches for a randomly generated number in each list.
+   Note: we are being nice here in that the number will be in the list...
+   Returns two lists, the first contains all the list sizes tried and
+   the second contains the average time per locate operation for each list size. """
     list_of_times = []
     list_of_sizes = SIZES_TO_TEST
     for list_size in list_of_sizes:
-        num_list = list(range(list_size))  # creates a list of n items
+        num_list = make_list(list_size)  # creates a list of n items
 
         # run trials, each on simply trying to locate the number in the list
         start = time.perf_counter()
         for i in range(num_trials):
             # try to find random number (between 1 and n) in the list
             value_to_find = random.randrange(list_size)
-            found = value_to_find in num_list
+
+            if use_contains:
+                num_list.contains(value_to_find)
+            else:
+                found = value_to_find in num_list
         end = time.perf_counter()
 
         # print number of trials and time taken (with a tab in between)
         time_taken_per_locate = (end - start) / num_trials
-        print(f"{list_size}\t{time_taken_per_locate:>10.8f}")
+        print(f"\r{list_size}\t{time_taken_per_locate:>10.8f}", end="")
 
         # keep track of all the times
         list_of_times.append(time_taken_per_locate)
+
+    print()
     return list_of_sizes, list_of_times
 
+def run_list_trials(num_trials=1):
+
+    def make_list(size):
+        return list(range(size))
+
+    return run_trials(make_list, num_trials)
 
 def run_set_trials(num_trials=1):
-    """ Creates a set and fills it with values,
-    then searches for a randomly generated number in the set.
-    Note: we are being nice here, as the number will be in the set..."""
-    list_of_times = []
-    list_of_sizes = SIZES_TO_TEST
-    for set_size in list_of_sizes:
-        # fill test set with n items {0,1,2,....}
-        test_set = {i for i in range(set_size)}
 
-        # repeat the following num_trials times:
-        #   check whether a randomly generated number is in the set
-        # ---start student section---
-        pass
-        # ===end student section===
-        # keep track of all the times
-        list_of_times.append(time_taken_per_locate)
-    return list_of_sizes, list_of_times
+    def make_list(size):
+        return {i for i in range(size)}
+
+    return run_trials(make_list, num_trials)
 
 
 def run_linear_array_trials(num_trials=1):
-    """ Creates linear arrays filled with a range of values
-    then searches for a randomly generated number in each array.
-    Note: we are being nice here in that the number will be in the array...
-    Returns two lists, the first contains all the array sizes tried and
-    the second contains the average time per locate operation for each array size.
-    You should be able to copy and tweak this to run trials for
-    sorted arrays and bitvector arrays.
-    """
-    list_of_times = []
-    # we will test for sizes [20000, 40000, 60000, etc...]
-    list_of_sizes = SIZES_TO_TEST
-    for array_size in list_of_sizes:
-
+    def make_list(size):
         array = LinearArray()
-        # quick hack to fill with sorted data
-        # we search for random items so the sortedness is irrelevant here
-        array.data = list(range(array_size))
+        array.data = list(range(size))
+        return array
 
-        # run trials, each on simply trying to locate the number in the list
-        start = time.perf_counter()
-        for i in range(num_trials):
-            # try to find random number (between 1 and n) in the list
-            value_to_find = random.randrange(array_size)
-            found = array.contains(value_to_find)
-        end = time.perf_counter()
+    return run_trials(make_list, num_trials, True)
 
-        # print number of trials and time taken (with a tab in between)
-        time_taken_per_locate = (end - start) / num_trials
-        print(f"{array_size}\t{time_taken_per_locate:>10.8f}")
+def run_sorted_array_trials(num_trials=1):
+    def make_list(size):
+        array = SortedArray()
+        array.data = list(range(size))
+        return array
 
-        # keep track of all the times
-        list_of_times.append(time_taken_per_locate)
-    return list_of_sizes, list_of_times
+    return run_trials(make_list, num_trials, True)
 
+def run_bva_array_trials(num_trials=1):
+    def make_list(size):
+        array = BitVectorArray(size)
+        array.data = [1 for n in range(size + 1)]
+        return array
 
-
+    return run_trials(make_list, num_trials, True)
 
 def graph_one_series_example(n_trials):
     """An example of how to graph one series.
@@ -144,11 +130,8 @@ def graph_two_series_example(n_trials):
     IMPORTANT NOTE: Make sure the matplotlib import is uncommented
     at the top of this file before using this function
     """
-    print('Getting list data for graph...')
-    list_xs, list_ys = run_list_trials(n_trials)
-    print()
-    print('Getting set data for graph...')
-    set_xs, set_ys = run_set_trials(n_trials)
+
+
 
     # We use the following instead of axes = plt.axes()
     # as it opens new figures (figs) in new windows
@@ -157,8 +140,18 @@ def graph_two_series_example(n_trials):
     # two graph windows :)
     fig, axes = plt.subplots()
 
-    axes.plot(list_xs, list_ys, color='blue', marker='o', label='list')
-    axes.plot(set_xs, set_ys, color='red', marker='o', label='set')
+    data = [
+        ["list", run_list_trials, "blue"],
+        ["set", run_set_trials, "red"],
+        ["linear", run_linear_array_trials, "green"],
+        ["sorted", run_sorted_array_trials, "yellow"],
+        ["bva", run_bva_array_trials, "orange"],
+    ]
+    for label, function, col in data:
+        print(f"Trial for {label.title()}: ")
+        xs, ys = function(n_trials)
+        axes.plot(xs, ys, color=col, marker='o', label=label)
+
     # You can even add a third or fourth plot when you're ready :)
     axes.set_title(f'List Locate Testing, {n_trials} Trial runs')
     axes.set_xlabel('n')
@@ -184,7 +177,7 @@ def run_tests(n_trials):
 
 def main():
     """ Put your tests in here """
-    run_tests(n_trials=10)
+    # run_tests(n_trials=10)
 
     # uncomment either of the following lines to run some graphs
 
@@ -192,7 +185,7 @@ def main():
     # import for matplotlib at the start of the file
     # before you start trying to do graph things
     # graph_one_series_example(n_trials=10)
-    # graph_two_series_example(n_trials=10)
+    graph_two_series_example(n_trials=100)
     #
     #
     # if you can't get matplotlib to run
