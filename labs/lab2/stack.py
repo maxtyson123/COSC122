@@ -55,9 +55,7 @@ class Stack(object):
 
     def push(self, item):
         """Push a new item onto the stack."""
-        # ---start student section---
-        pass
-        # ===end student section===
+        self._data.append(item)
 
     def pop(self):
         """ Pop an item off the top of the stack and return it.
@@ -68,19 +66,16 @@ class Stack(object):
         if self.is_empty():
             raise IndexError('Can\'t pop from empty stack!')
         else:
-            # not empty so write your code to remove the last
-            # item from the data list and return it
-            # ---start student section---
-            pass
-            # ===end student section===
+            return self._data.pop()
 
     def peek(self):
         """Return the item on the top of the stack, but don't remove it.
         Returns None if the stack is empty
         """
-        # ---start student section---
-        pass
-        # ===end student section===
+        if self.is_empty():
+            return None
+
+        return self._data[-1]
 
     def is_empty(self):
         """ Returns True if empty """
@@ -105,5 +100,18 @@ if __name__ == '__main__':
 
     # failed doctests will show you what you need to fix/write
     # If everything works then the doctests will output nothing...
-    doctest.testmod()
+    # doctest.testmod()
+
+    s = Stack() # make s an empty Stack
+    s.push(16)
+    s.push(21)
+    a = s.pop()
+    s.push(42)
+    s.push(25)
+    b = s.pop()
+    s.push(22)
+    s.push(28)
+    s.push(31)
+    c = s.pop()
+    print(a,b,c)
 
