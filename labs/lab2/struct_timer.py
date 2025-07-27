@@ -11,30 +11,45 @@ REZ = time.get_clock_info('perf_counter').resolution
 print('Smallest unit of time is ' + str(REZ) + ' seconds')
 
 
-def time_stack_push(initial_size, n_trials):
+def time_push(initial_size, n_trials, obj, do_push, operation, name, operation_name):
     """ Finds average time for pushing onto a stack of a given initial size"""
-    s = Stack()
 
     # s._data = [0] * initial_size  # is cunning but sometimes causes weird timings
     # so simply push lots of random items onto the stack
     for _ in range(initial_size):
-        s.push(random.randint(0, 127))
+        do_push(obj, random.randint(0, 127))
 
     # time some pushes
     start_time = time.perf_counter()
     for i in range(n_trials):
-        s.push(0)
+        operation(obj, 0)
     end_time = time.perf_counter()
     time_per_operation = (end_time - start_time)/n_trials
 
-    template = "Initial Stack size = {:,d} -> avg. time/push for {:,d} pushes is {:10.8f}"
+    template = "Initial " + name  + " size = {:,d} -> avg. time/" + operation_name + " for {:,d} " + operation_name +" is {:10.8f}"
     print((template.format(initial_size, n_trials, time_per_operation)))
 
 
-# Do some creative copy and pasting here to make functions for other time trials
-# ---start student section---
+push = lambda ref, item : ref.push(item)
+pop = lambda ref, item: ref.pop()
+enqueue = lambda ref, item: ref.enqueue(item)
+dequeue = lambda ref, item: ref.dequeue()
 
-# ===end student section===
+def time_stack_push(size, n_trials):
+    stack = Stack()
+    time_push(size, n_trials, stack, push, push, "Stack", "push")
+
+def time_stack_pop(size, n_trials):
+    stack = Stack()
+    time_push(size, n_trials, stack, push, pop, "Stack", "pop")
+
+def time_queue_enqueue(size, n_trials):
+    queue = Queue()
+    time_push(size, n_trials, queue, enqueue, enqueue, "Queue", "enqueue")
+
+def time_queue_dequeue(size, n_trials):
+    queue = Queue()
+    time_push(size, n_trials, queue, enqueue, dequeue, "Queue", "dequeue")
 
 
 def run_tests():
@@ -42,11 +57,11 @@ def run_tests():
     initially just runs the test for stack pushes
     """
     print('\n' *3)
-    initial_size = 1000000  # start with this many items in data structure
     n_trials = 100  # run this many trials and take the average time
+    trials = [time_stack_push, time_stack_pop, time_queue_enqueue, time_queue_dequeue]
 
-    time_stack_push(initial_size, n_trials)
-    # call your shiny new test functions here
-
+    for size in [1000000, 10000000]:
+        for trial in trials:
+            trial(size, n_trials)
 
 run_tests()
