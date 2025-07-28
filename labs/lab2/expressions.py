@@ -102,9 +102,20 @@ def evaluate_postfix(expression):
     # Code to evaluate the postfix expression and return the result goes here
     # NOTE: Convert operands to floats before pushing onto the stack
     tokens = tokens_from_string(expression)
-    # ---start student section---
-    pass
-    # ===end student section===
+    stack = Stack()
+
+    for token in tokens:
+        if token not in OP_PREC:
+            stack.push(float(token))
+        else:
+            p2 = stack.pop()
+            p1 = stack.pop()
+            stack.push(calculate(token, p1, p2))
+
+    if len(stack) > 1 or stack.is_empty():
+        raise ValueError("Invalid amount of operands")
+
+    return stack.pop()
 
 
 def infix_to_postfix(infix_expression):
@@ -132,9 +143,9 @@ def infix_to_postfix(infix_expression):
     # Code to process tokens and return the postfix string goes here
     # Hint: if token not in OP_PREC then it is an operand
     tokens = tokens_from_string(infix_expression)
-    # ---start student section---
-    pass
-    # ===end student section===
+
+
+
 
 
 def evaluate_infix(infix_expression):
@@ -230,12 +241,13 @@ if __name__ == '__main__':
 
     # Uncomment the call to testmod to run the tests
     # Can enter an infinite loop if your Stack isn't implemented correctly
-    # doctest.testmod()
+    doctest.testmod()
 
     # Or you can test each thing separately
-    doctest.run_docstring_examples(calculate, None)
+    # doctest.run_docstring_examples(calculate, None)
     # doctest.run_docstring_examples(evaluate_postfix, None)
     # doctest.run_docstring_examples(infix_to_postfix, None)
     # doctest.run_docstring_examples(evaluate_infix, None)
     # doctest.run_docstring_examples(evaluate_prefix, None)
 
+    print(evaluate_postfix('5 1 + 6 2 8 * + 3 - 4 * 7 - * 5 - 5 1 6 2 - 8 * + 3 4 + * 7 - * *'))
