@@ -84,3 +84,15 @@ if __name__ == '__main__':
     # failed doctests will show you what you need to fix/write
     # If everything works then the doctests will output nothing...
     doctest.testmod()
+
+    d = Deque()  # make d an empty deque
+    d.enqueue_front(25)
+    d.enqueue_rear(28)
+    d.enqueue_rear(20)
+    a = d.dequeue_front()
+    b = d.dequeue_front()
+    d.enqueue_front(11)
+    d.enqueue_rear(23)
+    d.enqueue_rear(18)
+    c = d.dequeue_front()
+    print(a,b,c)
