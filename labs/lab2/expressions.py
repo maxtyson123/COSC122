@@ -17,8 +17,8 @@ OP_PREC ={"(":1,
          "-": 2,
          "*": 3,
          "/": 3,
-         ")": 4}
-
+         "^": 4,
+         ")": 5}
 
 
 def tokens_from_string(expression):
@@ -118,7 +118,17 @@ def evaluate_postfix(expression):
     return stack.pop()
 
 
-def infix_to_postfix(infix_expression):
+def num_to_var(str):
+    var = "yknhf"
+    out = ""
+    for c in str:
+        if c not in OP_PREC and c not in [" ", "|"]:
+            out += var[int(c) - 1]
+        else:
+            out += c
+    return out
+
+def infix_to_postfix(infix_expression): #, pout = False):
     """
     Converts an infix expression to a postfix expression.
     Operands in the given expression must be integers.
@@ -144,9 +154,49 @@ def infix_to_postfix(infix_expression):
     # Hint: if token not in OP_PREC then it is an operand
     tokens = tokens_from_string(infix_expression)
 
+    output = []
+    stack  = Stack()
+    for token in tokens:
 
+        # Operand
+        if token not in OP_PREC:
+            output.append(token)
 
+        # Open bracket
+        elif token == "(":
+            stack.push(token)
 
+        # Close bracket
+        elif token == ")":
+
+            # Pop until the opening bracket
+            item = stack.pop()
+            while item != "(":
+                output.append(item)
+                item = stack.pop()
+
+        # Operator
+        else:
+
+            # Pop operators in the precedence order
+            while not stack.is_empty() and OP_PREC.get(stack.peek()) >= OP_PREC[token]:
+                output.append(stack.pop())
+
+            stack.push(token)
+
+        # if pout:
+        #     stack_str = " ".join(stack._data)
+        #     print_str = token + " | " + stack_str + " " * (15 - len(stack_str)) + " |" + " ".join(output)
+        #     print(num_to_var(print_str))
+
+    # Pop all remain operators
+    while not stack.is_empty():
+        output.append(stack.pop())
+
+    if "(" in output:
+        raise ValueError("Unclosed bracket left over")
+
+    return " ".join(output)
 
 def evaluate_infix(infix_expression):
     """
@@ -249,5 +299,5 @@ if __name__ == '__main__':
     # doctest.run_docstring_examples(infix_to_postfix, None)
     # doctest.run_docstring_examples(evaluate_infix, None)
     # doctest.run_docstring_examples(evaluate_prefix, None)
-
-    print(evaluate_postfix('5 1 + 6 2 8 * + 3 - 4 * 7 - * 5 - 5 1 6 2 - 8 * + 3 4 + * 7 - * *'))
+    print("\n\n\n\n")
+    print(infix_to_postfix('8 * ( 7 - 3 ) / ( 9 - 1 ) + 3 - 9 + 8 * ( 8 - 2 + 7 - 6 ) / ( 6 - 3 )'))
