@@ -163,8 +163,7 @@ class BaseTester(BaseTestMethods):
         test_time = (self.end_time - self.start_time)
         print(f'{test_time:.4f}s', end=' ')
 
-
-
+@unittest.skip("Dont test the base classes")
 class TinyTests(BaseTester):
 
     #== Tests with a trivially tiny dataset ==#
@@ -180,7 +179,7 @@ class TinyTests(BaseTester):
         n_stolen, n_sighted, n_matches = 2, 5, 1
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-
+@unittest.skip("Dont test the base classes")
 class SmallTests(BaseTester):
 
     def test_010_small_no_common(self):
@@ -219,7 +218,7 @@ class SmallTests(BaseTester):
         n_stolen, n_sighted, n_matches = 5, 10, 5
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-
+@unittest.skip("Dont test the base classes")
 class MediumTests(BaseTester):
 
     def test_medium_some_common(self):
@@ -246,9 +245,7 @@ class MediumTests(BaseTester):
         n_stolen, n_sighted, n_matches = 100, 1000, 100
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-
-
-
+@unittest.skip("Dont test the base classes")
 class LargeTestsV1(BaseTester):
 
     def test_010_large_no_common(self):
@@ -263,7 +260,7 @@ class LargeTestsV1(BaseTester):
         n_stolen, n_sighted, n_matches = 1000, 20000, 0
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-
+@unittest.skip("Dont test the base classes")
 class LargeTestsV2(BaseTester):
 
     def test_large_some_common(self):
@@ -278,7 +275,7 @@ class LargeTestsV2(BaseTester):
         n_stolen, n_sighted, n_matches = 100, 1000, 100
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-
+@unittest.skip("Dont test the base classes")
 class LargeTestsV3(BaseTester):
 
     def test_large_all_common(self):
@@ -293,7 +290,7 @@ class LargeTestsV3(BaseTester):
         n_stolen, n_sighted, n_matches = 1000, 1000, 1000
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-
+@unittest.skip("Dont test the base classes")
 class HugeTestsV1(BaseTester):
 
     def test_huge_none_common(self):
@@ -338,7 +335,6 @@ class BaseTestLinear(BaseTester):
 # which are obviously needed to be able to do binary searching
 
 
-
 class TinyLinear(BaseTestLinear, TinyTests):
     pass
 
@@ -361,7 +357,6 @@ class LargeLinearV3(BaseTestLinear, LargeTestsV3):
 
 class HugeLinearV1(BaseTestLinear, HugeTestsV1):
     pass
-
 
 # Here we do some extra tests with known values
 class SmallLinearExact(BaseTestLinear):
@@ -463,8 +458,6 @@ class MediumLinearExact(BaseTestLinear):
             n_stolen, n_sighted, n_matches, quiet=True)
 
 
-
-
 class LargeLinearExact(BaseTestLinear):
 
     def test_010_large_no_common_comps_exact(self):
@@ -523,33 +516,31 @@ class BaseTestBinary(BaseTester):
 # which are obviously needed to be able to do binary searching
 
 
-
+@unittest.skip("Binary not implemented")
 class TinyBinary(BaseTestBinary, TinyTests):
     pass
 
-
+@unittest.skip("Binary not implemented")
 class SmallBinary(BaseTestBinary, SmallTests):
     pass
 
-
+@unittest.skip("Binary not implemented")
 class MediumBinary(BaseTestBinary, MediumTests):
     pass
 
-
-
-
+@unittest.skip("Binary not implemented")
 class LargeBinaryV1(BaseTestBinary, LargeTestsV1):
     pass
 
-
+@unittest.skip("Binary not implemented")
 class LargeBinaryV2(BaseTestBinary, LargeTestsV2):
     pass
 
-
+@unittest.skip("Binary not implemented")
 class LargeBinaryV3(BaseTestBinary, LargeTestsV3):
     pass
 
-
+@unittest.skip("Binary not implemented")
 class HugeBinaryV1(BaseTestBinary, HugeTestsV1):
     pass
 

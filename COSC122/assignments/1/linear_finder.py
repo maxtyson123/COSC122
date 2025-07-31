@@ -31,9 +31,25 @@ def linear_stolen_plate_finder(stolen_plates, sighted_plates):
     """
     result_list = []
     total_comparisons = 0
-    # ---start student section---
-    pass
-    # ===end student section===
+
+    for index, plate in enumerate(sighted_plates):
+
+        # Was the plate stolen
+        # if plate in stolen_plates:
+        #     result_list.append(plate)
+
+        # Was the plate stolen ( I assume this is the way they wanted it done)
+        for stolen in stolen_plates:
+
+            total_comparisons += 1
+            if stolen == plate:
+                result_list.append(plate)
+                break
+
+        # All the stolen plates have been found
+        if len(result_list) == len(stolen_plates):
+            break
+
     return result_list, total_comparisons
 
 
@@ -45,11 +61,10 @@ def run_tests():
     """ Use this function to run some simple tests
     to help with developing your awesome answer code.
     You should leave this out of your submission """
-    print('Tests are fun!')
+    stolen=['SP8651', 'PK4720']
+    sighted=['MT2703', 'SP8651', 'CS0118', 'ZU1800', 'PK4720']
+    print(linear_stolen_plate_finder(stolen,sighted))
 
 
-# You can leave the following out of your submission
 if __name__ == '__main__':
-    # This won't run when your module is imported by the tests module.
-    # Use run_tests to try out some of your own simple tests.
     run_tests()
