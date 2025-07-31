@@ -40,6 +40,7 @@ def binary_stolen_plate_finder(stolen_plates, sighted_plates):
         """
 
         halfway = len(check_list) // 2
+        halfway_item = check_list[halfway]
 
         # Is the item in the start half of this list
         if item < check_list[halfway]:
@@ -76,11 +77,11 @@ def binary_stolen_plate_finder(stolen_plates, sighted_plates):
 
 def run_tests():
     # wrap raw strings in NumberPlate for proper comparison counting
-    raw_stolen = ["PK4720", "SP8651"]
-    raw_sighted = ["UG7543", "KN5190", "WW1181", "QB0150", "SP8651"]
+    stolen = ['AB7030', 'AL5300', 'EG2025', 'LI3565', 'MT2703', 'NG5300', 'OS3665', 'PK4720', 'SE2025', 'SO4770']  # n = 10
+    sighted = ['AL5300', 'SE2025']  # m = 2
 
-    stolen_objects = [classes.NumberPlate(p) for p in raw_stolen]
-    sighted_objects = [classes.NumberPlate(p) for p in raw_sighted]
+    stolen_objects = [classes.NumberPlate(p) for p in stolen]
+    sighted_objects = [classes.NumberPlate(p) for p in sighted]
 
     found, comps = binary_stolen_plate_finder(stolen_objects, sighted_objects)
     print("Found:", [str(p) for p in found])
