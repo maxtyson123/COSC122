@@ -12,6 +12,8 @@ These unit tests aren't going to be that useful for debugging!
 
 import os
 import shutil
+import sys
+
 from stats import IS_MARKING_MODE
 import signal
 import unittest
@@ -30,6 +32,14 @@ TEST_FILE_TEMPLATE = '{n_stolen}-{n_sighted}-{n_matches}-{seed}.txt'
 DEF_SEED = 'a'  # default seed
 
 real_comparisons = StatCounter.get_comparisons
+
+
+# Wrapper for skipping based on flag
+skip_tests = ["linear"]
+def skip_if(category):
+    """Skip a test if 'category' was requested in --skip-tests."""
+    return unittest.skipIf(category in skip_tests,
+                           f"skipping {category} search tests (skip-tests={','.join(skip_tests)})")
 
 
 class TypeAssertion(object):
@@ -163,8 +173,17 @@ class BaseTester(BaseTestMethods):
         test_time = (self.end_time - self.start_time)
         print(f'{test_time:.4f}s', end=' ')
 
-@unittest.skip("Dont test the base classes")
-class TinyTests(BaseTester):
+class SkipIfDirectlyInstantiated:
+    BASE_CLASS = None
+
+    def setUp(self):
+        if self.__class__ == self.BASE_CLASS:
+            raise unittest.SkipTest(f"{self.BASE_CLASS.__name__} is a base test class")
+        super().setUp()
+
+
+
+class TinyTests(SkipIfDirectlyInstantiated, BaseTester):
 
     #== Tests with a trivially tiny dataset ==#
     def test_010_tiny(self):
@@ -179,8 +198,9 @@ class TinyTests(BaseTester):
         n_stolen, n_sighted, n_matches = 2, 5, 1
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-@unittest.skip("Dont test the base classes")
-class SmallTests(BaseTester):
+
+
+class SmallTests(SkipIfDirectlyInstantiated, BaseTester):
 
     def test_010_small_no_common(self):
         n_stolen, n_sighted, n_matches = 10, 5, 0
@@ -218,8 +238,7 @@ class SmallTests(BaseTester):
         n_stolen, n_sighted, n_matches = 5, 10, 5
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-@unittest.skip("Dont test the base classes")
-class MediumTests(BaseTester):
+class MediumTests(SkipIfDirectlyInstantiated, BaseTester):
 
     def test_medium_some_common(self):
         n_stolen, n_sighted, n_matches = 100, 1000, 10
@@ -245,8 +264,7 @@ class MediumTests(BaseTester):
         n_stolen, n_sighted, n_matches = 100, 1000, 100
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-@unittest.skip("Dont test the base classes")
-class LargeTestsV1(BaseTester):
+class LargeTestsV1(SkipIfDirectlyInstantiated,BaseTester):
 
     def test_010_large_no_common(self):
         n_stolen, n_sighted, n_matches = 1000, 1000, 0
@@ -260,8 +278,7 @@ class LargeTestsV1(BaseTester):
         n_stolen, n_sighted, n_matches = 1000, 20000, 0
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-@unittest.skip("Dont test the base classes")
-class LargeTestsV2(BaseTester):
+class LargeTestsV2(SkipIfDirectlyInstantiated, BaseTester):
 
     def test_large_some_common(self):
         n_stolen, n_sighted, n_matches = 100, 1000, 100
@@ -275,8 +292,7 @@ class LargeTestsV2(BaseTester):
         n_stolen, n_sighted, n_matches = 100, 1000, 100
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-@unittest.skip("Dont test the base classes")
-class LargeTestsV3(BaseTester):
+class LargeTestsV3(SkipIfDirectlyInstantiated, BaseTester):
 
     def test_large_all_common(self):
         n_stolen, n_sighted, n_matches = 1000, 1000, 1000
@@ -290,8 +306,7 @@ class LargeTestsV3(BaseTester):
         n_stolen, n_sighted, n_matches = 1000, 1000, 1000
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
-@unittest.skip("Dont test the base classes")
-class HugeTestsV1(BaseTester):
+class HugeTestsV1(SkipIfDirectlyInstantiated, BaseTester):
 
     def test_huge_none_common(self):
         n_stolen, n_sighted, n_matches = 10000, 20000, 0
@@ -305,10 +320,18 @@ class HugeTestsV1(BaseTester):
         n_stolen, n_sighted, n_matches = 10000, 20000, 0
         self.internal_comparisons_test(n_stolen, n_sighted, n_matches)
 
+TinyTests.BASE_CLASS     = TinyTests
+SmallTests.BASE_CLASS   = SmallTests
+MediumTests.BASE_CLASS  = MediumTests
+LargeTestsV1.BASE_CLASS = LargeTestsV1
+LargeTestsV2.BASE_CLASS = LargeTestsV2
+LargeTestsV3.BASE_CLASS = LargeTestsV3
+HugeTestsV1.BASE_CLASS  = HugeTestsV1
+
 
 class BaseTestLinear(BaseTester):
     """ Unit tests for the sequential plate finder.
-    Overrides the setUp method to set the macthing function.
+    Overrides the setUp method to set the matching function.
     Overrides the get_bounds method to give bounds for linear search version.
     """
 
@@ -334,31 +357,38 @@ class BaseTestLinear(BaseTester):
 # as well as saying to use the files with sorted stolen plates
 # which are obviously needed to be able to do binary searching
 
-
+@skip_if('linear')
 class TinyLinear(BaseTestLinear, TinyTests):
     pass
 
 
+@skip_if('linear')
 class SmallLinear(BaseTestLinear, SmallTests):
     pass
 
 
+@skip_if('linear')
 class LargeLinearV1(BaseTestLinear, LargeTestsV1):
     pass
 
 
+@skip_if('linear')
 class LargeLinearV2(BaseTestLinear, LargeTestsV2):
     pass
 
 
+@skip_if('linear')
 class LargeLinearV3(BaseTestLinear, LargeTestsV3):
     pass
 
 
+@skip_if('linear')
 class HugeLinearV1(BaseTestLinear, HugeTestsV1):
     pass
 
+
 # Here we do some extra tests with known values
+@skip_if('linear')
 class SmallLinearExact(BaseTestLinear):
 
     def test_010_tiny_comps_exact(self):
@@ -434,7 +464,7 @@ class SmallLinearExact(BaseTestLinear):
         self.internal_comparisons_test(
             n_stolen, n_sighted, n_matches, quiet=True)
 
-
+@skip_if('linear')
 class MediumLinearExact(BaseTestLinear):
     def test_010_medium_no_common_comps_exact(self):
         n_stolen, n_sighted, n_matches, expected = 100, 1000, 0, 100000
@@ -457,7 +487,7 @@ class MediumLinearExact(BaseTestLinear):
         self.internal_comparisons_test(
             n_stolen, n_sighted, n_matches, quiet=True)
 
-
+@skip_if('linear')
 class LargeLinearExact(BaseTestLinear):
 
     def test_010_large_no_common_comps_exact(self):
@@ -515,32 +545,37 @@ class BaseTestBinary(BaseTester):
 # as well as saying to use the files with sorted stolen plates
 # which are obviously needed to be able to do binary searching
 
-
-@unittest.skip("Binary not implemented")
+@skip_if('binary')
 class TinyBinary(BaseTestBinary, TinyTests):
     pass
 
-@unittest.skip("Binary not implemented")
+
+@skip_if('binary')
 class SmallBinary(BaseTestBinary, SmallTests):
     pass
 
-@unittest.skip("Binary not implemented")
+
+@skip_if('binary')
 class MediumBinary(BaseTestBinary, MediumTests):
     pass
 
-@unittest.skip("Binary not implemented")
+
+@skip_if('binary')
 class LargeBinaryV1(BaseTestBinary, LargeTestsV1):
     pass
 
-@unittest.skip("Binary not implemented")
+
+@skip_if('binary')
 class LargeBinaryV2(BaseTestBinary, LargeTestsV2):
     pass
 
-@unittest.skip("Binary not implemented")
+
+@skip_if('binary')
 class LargeBinaryV3(BaseTestBinary, LargeTestsV3):
     pass
 
-@unittest.skip("Binary not implemented")
+
+@skip_if('binary')
 class HugeBinaryV1(BaseTestBinary, HugeTestsV1):
     pass
 
@@ -564,18 +599,14 @@ def all_tests_suite():
     suite.addTest(test_loader(MediumLinearExact))
     suite.addTest(test_loader(LargeLinearExact))
 
-    # IMPORTANT NOTE <==================================================================
-    # uncomment the following lines when you are ready for binary testing
-    # suite.addTest(test_loader(TinyBinary))
-    # suite.addTest(test_loader(SmallBinary))
-    # suite.addTest(test_loader(MediumBinary))
-    # suite.addTest(test_loader(LargeBinaryV1))
-    # suite.addTest(test_loader(LargeBinaryV2))
-    # suite.addTest(test_loader(LargeBinaryV3))
-    # suite.addTest(test_loader(HugeBinaryV1))
+    suite.addTest(test_loader(TinyBinary))
+    suite.addTest(test_loader(SmallBinary))
+    suite.addTest(test_loader(MediumBinary))
+    suite.addTest(test_loader(LargeBinaryV1))
+    suite.addTest(test_loader(LargeBinaryV2))
+    suite.addTest(test_loader(LargeBinaryV3))
+    suite.addTest(test_loader(HugeBinaryV1))
     return suite
-
-
 
 
 def main():
