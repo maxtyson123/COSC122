@@ -1,35 +1,26 @@
-from PythonTools.debug import capture_and_assert_file
-
-
 class Node:
     def __init__(self, data):
         self.data = data
         self.next_node = None
 
-def print_linked_list(start):
 
-    node = start
-    while node:
-        print(node.data)
-        node = node.next_node
+class UnsortedLinkedList:
+
+    def __init__(self):
+        self.head = None
+
+    def add(self, item):
+        """ Makes a new node containing item as the data and
+            adds it to the start of the list, ie, before the
+            current head
+        """
+        # your answer should be three lines
+        node = Node(item)
+        node.next_node = self.head
+        self.head = node
 
 
-# TESTING
-def t1():
-    head = Node(10)
-    head.next_node = Node(20)
-    head.next_node.next_node = Node(30)
-    head.next_node.next_node.next_node = Node(40)
-    print_linked_list(head)
-
-
-def t2():
-    start = Node('y')
-    start.next_node = Node('a')
-    start.next_node.next_node = Node('y')
-    start.next_node.next_node.next_node = Node('a')
-    start.next_node.next_node.next_node.next_node = Node('y')
-    print_linked_list(start)
-
-capture_and_assert_file(t1, "tests/t1.txt")
-capture_and_assert_file(t2, "tests/t2.txt")
+my_list = UnsortedLinkedList()
+my_list.add(10)
+print(my_list.head.data)
+print(my_list.head.next_node)
